@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<title>Juan Franco</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no">
+    <link rel="stylesheet" href="https://js.arcgis.com/3.22/dijit/themes/claro/claro.css">
+    <link rel="stylesheet" href="https://js.arcgis.com/3.22/dojox/widget/ColorPicker/ColorPicker.css">
+    <link rel="stylesheet" href="https://js.arcgis.com/3.22/esri/css/esri.css">
+    <link rel="shortcut icon" href="images/jf_logo.png">
+    <link type="image/ico" rel="shortcut icon" href="images/jf_logo.png">
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script type="text/javascript" src="../tabs.js"></script>
+    <link rel="stylesheet" type="text/css" href="../tabs.css">
+    
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-114276026-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+    
+      gtag('config', 'UA-114276026-1');
+    </script>
+
+    
+    <style>
+      html, body, #map {
+        height:100%;
+        width:100%;
+        margin:0;
+        padding:0;
+      }
+	
+	/* parallax scrolling image */
+	.fixed-bg {
+    background-image: url("../images/wallpaper.jpg");
+    min-height: 800px;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+	}
+	
+	
+	/* Slideshow container */
+	.slideshow-container {
+	  max-width: 550px;
+	  position: relative;
+	  margin: auto;
+	  margin-top: 30px;
+	  box-shadow: 0 0 20px rgba(0,0,0,0.4); 
+	}
+
+	/* Caption text */
+	.text {
+	  color: #FFFFFF;
+	  font-size: 15px;
+	  padding: 8px 12px;
+    position: absolute;
+    margin-left: 25%;
+	  bottom: 8px;
+    width: 50%;
+	  text-align: center;
+    border: 2px solid silver;
+    border-radius: 20px;
+    background-color: black;
+    opacity: 0.7;
+  }
+
+
+	/* The dots/bullets/indicators */
+	.dot {
+	  height: 15px;
+	  width: 15px;
+	  margin: 0 2px;
+	  background-color: #bbb;
+	  border-radius: 50%;
+	  display: inline-block;
+	  transition: background-color 0.6s ease;
+	}
+
+	.dot.active {
+	  background-color: #717171;
+	}
+
+	/* Fading animation */
+	.fade {
+	  -webkit-animation-name: fade;
+	  -webkit-animation-duration: 1.5s;
+	  animation-name: fade;
+	  animation-duration: 1.5s;
+	}
+
+	@-webkit-keyframes fade {
+	  from {opacity: .4} 
+	  to {opacity: 1}
+	}
+
+	@keyframes fade {
+	  from {opacity: .4} 
+	  to {opacity: 1}
+	}
+
+	/* On smaller screens, decrease text size */
+	@media only screen and (max-width: 300px) {
+	  .text {font-size: 11px}
+	}
+	
+	/* Turn off parallax scrolling for tablets and phones. Increase the pixels if needed */
+	@media only screen and (max-device-width: 1024px) {
+    .parallax {
+	background-attachment: scroll;
+    }
+	}
+	
+	/* Gallery */
+	.gallery{
+	position:relative;
+	border: 1px solid #ccc;
+	box-shadow: 5px 5px 5px #888888;
+	}
+	.gallery:hover{ border: 1px solid #777;
+	box-shadow: 5px 5px 5px #555;}
+
+	.footer {
+	position:absolute; 
+	bottom:0; 
+	width:100%; 
+	height:100px; 
+	justify-content: center;
+	blackground: #000000;
+	}
+	.contact-icons {
+    display: inline-block;
+    justify-content: center;
+	margin-top: 20
+	}
+	.contact-icons img{
+	margin: 0 2rem;}
+	
+	.textmail{
+	padding:8px;display:block;border:none;border-bottom:1px solid #ccc;width:100%;margin-top:16px!important;margin-bottom:16px!important
+	}
+
+  .text-teal,{color:#3a016d!important}
+  .teal{color:#fff!important;background-color:#3a016d!important}
+  .resumetext{color:#3a016d!important}
+
+  .textmail{
+  padding:8px;display:block;border:none;border-bottom:1px solid #ccc;width:100%;margin-top:16px!important;margin-bottom:16px!important
+  }
+
+  .avatar{
+  display: inline-flex;
+  width: 100%;
+  border-radius: 10%;
+  padding: 0;
+    margin: 0;
+    border: 2px solid #a1a1a1;
+  }
+
+  .leftdiv{
+  float:left; 
+  width:33.33333%;
+  padding:0 8px;
+  }
+
+  .leftpanel{
+  color:#000!important;background-color:#fff!important;color:#3a016d!important;box-shadow:0 4px 10px 0 rgba(0,0,0,0.2),0 4px 20px 0 rgba(0,0,0,0.19);border-radius: 25px;
+  }
+
+  .rightdiv{
+  float:left; 
+  width:66.66666%;
+  padding:0 8px;
+  }
+
+  .rightpaneltop{
+  padding:0.01em 16px;box-shadow:0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12);color:#000!important;background-color:#fff!important;margin-bottom:16px!important;border-radius: 25px;
+  }
+
+  .rightpanelbottom{
+  padding:0.01em 16px;box-shadow:0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12);color:#000!important;background-color:#fff!important;border-radius: 25px;
+  }
+
+  
+
+	blockquote {
+    border: 1px solid #135477;
+    
+    font-size: 18px;
+    font-size: 1.8rem;
+    font-style: italic;
+    margin: 1.5em 0;
+    padding: 1.5em 1.5em 1em 3.5em;
+    position: relative;
+  }
+
+  blockquote:before {
+    content: "\f10d";
+    color: #3a016d;
+    display: inline-block;
+    font-family: 'FontAwesome';
+    font-size: 28px;
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1;
+    position: absolute;
+    top: .8em;
+    left: .5em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .foo img:last-child{display:none}
+  .foo:hover img:first-child{display:none}
+  .foo:hover img:last-child{display:inline-block}
+
+  #gallery {width: 660px; margin: 0 auto;}
+#gallery ul {padding-left: 10px;}
+#gallery li {display: inline; margin-right: 3px;}
+#gallery #main-img {background: url(bg_img.png) no-repeat 0 0; padding: 26px; width:100%; }
+
+
+</style>
+    <script src="https://js.arcgis.com/3.22/"></script>
+
+    <script type="text/JavaScript">
+// prepare the form when the DOM is ready 
+$(document).ready(function() {
+  $("#gallery li img").hover(function(){
+    $('#main-img').attr('src',$(this).attr('src').replace('thumb/', ''));
+  });
+  var imgSwap = [];
+   $("#gallery li img").each(function(){
+    imgUrl = this.src.replace('thumb/', '');
+    imgSwap.push(imgUrl);
+  });
+  $(imgSwap).preload();
+});
+$.fn.preload = function() {
+    this.each(function(){
+        $('<img/>')[0].src = this;
+    });
+}
+</script>
+
+    <script>
+      var map;
+      
+      require([
+        "esri/map", "esri/geometry/Point", 
+        "esri/symbols/SimpleMarkerSymbol", "esri/graphic",
+        "dojo/_base/array", "dojo/dom-style", "dojox/widget/ColorPicker", 
+        "dojo/domReady!"
+      ], function(
+        Map, Point,
+        SimpleMarkerSymbol, Graphic,
+        arrayUtils, domStyle, ColorPicker
+      ) {
+
+       map = new Map("map",{
+          basemap: "topo",
+          center: [ -77.033909,38.899850 ],
+          zoom: 12,
+          minZoom: 2
+        });
+        
+        map.on("load", mapLoaded);
+      
+        function mapLoaded(){
+          var points = [[-77.033909,38.899850]];
+          var iconPath = "M30.6,15.737c0-8.075-6.55-14.6-14.6-14.6c-8.075,0-14.601,6.55-14.601,14.6c0,4.149,1.726,7.875,4.5,10.524c1.8,1.801,4.175,4.301,5.025,5.625c1.75,2.726,5,11.976,5,11.976s3.325-9.25,5.1-11.976c0.825-1.274,3.05-3.6,4.825-5.399C28.774,23.813,30.6,20.012,30.6,15.737z";
+          var initColor = "#1d2fce";
+          arrayUtils.forEach(points, function(point) {
+            var graphic = new Graphic(new Point(point), createSymbol(iconPath, initColor));
+            map.graphics.add(graphic);
+          });
+          
+          var colorPicker = new ColorPicker({}, "picker1");
+          colorPicker.setColor(initColor);
+          domStyle.set(colorPicker, "left", "500px");
+          colorPicker.on("change", function(){
+            var colorCode = this.hexCode.value;
+            map.graphics.graphics.forEach(function(graphic){
+              graphic.setSymbol(createSymbol(iconPath, colorCode));
+            });
+          }); 
+        }
+        
+        function createSymbol(path, color){
+          var markerSymbol = new esri.symbol.SimpleMarkerSymbol();
+          markerSymbol.setPath(path);
+          markerSymbol.setColor(new dojo.Color(color));
+          markerSymbol.setOutline(null);
+          return markerSymbol;
+        }
+      });	  
+    </script>	
+
+  
+
+  </head>
+
+<body class="w3-white">
+
+
+<!-- Navbar (sit on top) -->
+<div class="w3-top">
+  <div class="w3-bar w3-white w3-wide w3-padding w3-card">
+    <a href="#home" class="w3-bar-item w3-button"><b>Juan Franco</b> Especialista GIS</a>
+    <!-- Float links to the right. Hide them on small screens -->
+    <div class="w3-right w3-hide-small">
+	  <a href="#resume" class="w3-bar-item w3-button" >Curriculum</a>
+      <a href="#projects" class="w3-bar-item w3-button">Proyectos</a>
+      <a href="#about" class="w3-bar-item w3-button">Sobre mi</a>
+      <a href="#contact" class="w3-bar-item w3-button">Contacto</a>
+      <a href="../index.html" class="w3-bar-item w3-button"><img src="../images/us.png" alt="English Version" width="25px;"  /></a>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Header -->
+
+<header class="w3-display-container w3-content w3-wide" style="max-width:100%;" id="home">
+  <div class="fixed-bg">
+  <div class="w3-display-middle w3-margin-top w3-center">
+    <h1 class="w3-xxlarge w3-text-white"><span class="w3-padding w3-black w3-opacity-min"><b>Juan Franco</b></span> <span class="w3-hide-small w3-text-light-grey">Especialista GIS</span></h1>
+  </div>
+  </div>
+</header>
+
+<!-- Page content -->
+
+<div class="w3-content" style="max-width:100%; background-color: #99D3Df">
+
+  <!-- Resume Section -->
+  <div class="w3-content w3-padding" style="max-width:1564px;">
+  <div class="w3-container w3-padding-32" id="resume">
+    <h2 class=" w3-padding-16" style="font-family: helvetica; color: #135477; border-bottom:1px solid #ccc!important;border-color:#135477!important"><b>Curriculum</b>  </h2>
+  </div>
+  
+  <!-- Resume Container -->
+  <div class="w3-content w3-margin-top" style="max-width:1564px;">
+
+  <!-- The Grid -->
+  <div class="w3-row-padding">
+  
+    <!-- Left Column -->
+    <div class="leftdiv">
+    
+      <div class="leftpanel">
+        <div style="padding: 10px">
+          <img src="../images/avatar.png" class="avatar" alt="Avatar">
+        </div>
+        <div class="w3-container">
+          <p><i class="fa fa-briefcase fa-fw w3-margin-right w3-large text-teal"></i>Especialista GIS</p>
+          <p><i class="fa fa-home fa-fw w3-margin-right w3-large text-teal"></i>Alexandria, VA</p>
+          <p><i class="fa fa-envelope fa-fw w3-margin-right w3-large text-teal"></i>jd.franco.caballero@gmail.com</p>
+          <p><i class="fa fa-phone fa-fw w3-margin-right w3-large text-teal"></i>703-401-1926</p>
+          <hr>
+
+          <p class="w3-large"><b><i class="fa fa-asterisk fa-fw w3-margin-right text-teal"></i>Experiencia</b></p>
+          <p>Plataforma ArcGIS</p>
+          <div class="w3-light-grey w3-round-xlarge w3-small">
+            <div class="w3-container w3-center w3-round-xlarge teal" style="width:95%">95%</div>
+          </div>
+          <p>HTML+CSS</p>
+          <div class="w3-light-grey w3-round-xlarge w3-small">
+            <div class="w3-container w3-center w3-round-xlarge teal" style="width:80%">
+              <div class="w3-center w3-text-white">80%</div>
+            </div>
+          </div>
+          <p>Javascript</p>
+          <div class="w3-light-grey w3-round-xlarge w3-small">
+            <div class="w3-container w3-center w3-round-xlarge teal" style="width:75%">75%</div>
+          </div>
+          <p>Administración de Bases de Datos</p>
+          <div class="w3-light-grey w3-round-xlarge w3-small">
+            <div class="w3-container w3-center w3-round-xlarge teal" style="width:60%">60%</div>
+          </div>
+          <br>
+
+          <p class="w3-large w3-text-theme"><b><i class="fa fa-globe fa-fw w3-margin-right teal"></i>Idiomas</b></p>
+          <p>Inglés</p>
+          <div class="w3-light-grey w3-round-xlarge">
+            <div class="w3-round-xlarge teal" style="height:24px;width:100%"><center>100%</center></div>
+          </div>
+          <p>Español</p>
+          <div class="w3-light-grey w3-round-xlarge">
+            <div class="w3-round-xlarge teal" style="height:24px;width:100%"><center>100%</center></div>
+          </div>
+          <br>
+        </div>
+      </div><br>
+
+    <!-- End Left Column -->
+    </div>
+
+    <!-- Right Column -->
+    <div class="rightdiv">
+    
+      <div class="rightpaneltop">
+        <h2 class="resumetext w3-padding-16"><i class="fa fa-suitcase fa-fw w3-margin-right w3-xxlarge text-teal"></i>Experiencia Laboral</h2>
+        <div class="w3-container">
+          <h5 class="w3-opacity resumetext"><b>Especialista GIS Senior / National Community Reinvestment Coalition</b></h5>
+          <h6 class="text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Agosto 2016 - <span class="w3-tag teal w3-round">Presente</span></h6>
+          <p>• Aceleración del proceso de creación de mapas mediante el desarrollo de diseños cartográficos, formatos y estándares de diseseño  .<br>
+       • Disminución del tiempo de entrega de datos mediante la creación de bases de datos SQL que contienen datos de terceros accesibles a través de Power BI<br>
+       • Reducción de errores humanos al refinar los flujos de trabajo de mapas con la adición de scripts automatizados<br>
+       • Implementación de la tecnología de ArcGIS Server para actualizar informes departamentales en papel a aplicaciones web y para desarrollar y mantener herramientas de mapas web<br>
+       • Diseño y administración del sitio web del equipo de Investigación y Evaluación<br>
+       • Entrenamiento de nuevos empleados en la ejecución y entrega de mapas<br>
+       • Ayuda tanto a clientes como a compañeros con solución de problemas y asistencia técnica</p>
+          <hr>
+        </div>
+        <div class="w3-container">
+          <h5 class="w3-opacity resumetext"><b>Técnico de diseño de red FTTH / Gestall Ingenier&#237;a</b></h5>
+          <h6 class="text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Noviembre 2014 - Diciembre 2015</h6>
+          <p>• Realización de BAS (Building & Address Survey)<br>
+       • Replanteos de edificios para la planificación de las infraestructuras de fibra óptica.<br>
+       • Realización de diseños de redes de Fibra Óptica utilizando sistemas de información geográfica para el despliegue de redes FTTH (Telefónica y Jazztel)</p>
+          <hr>
+        </div>
+        <div class="w3-container">
+          <h5 class="w3-opacity resumetext"><b>Becario GIS / Eptisa Tecnolog&#237;as de la Informaci&#243;n</b></h5>
+          <h6 class="text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Mayo 2014 - Julio 2014</h6>
+          <p>• 280 horas con el cliente (Policia Nacional) para acualizar cartografía y bases de datos y desarrollar aplicaciones SIG</p><br>
+        </div>
+      </div>
+
+      <div class="rightpanelbottom">
+        <h2 class="resumetext w3-padding-16"><i class="fa fa-certificate fa-fw w3-margin-right w3-xxlarge text-teal"></i>Educación</h2>
+        <div class="w3-container">
+          <h5 class="w3-opacity resumetext"><b>Universidad Politécnica de Madrid</b></h5>
+          <h6 class="text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>2007 - 2012</h6>
+          <p>Ingeniería Técnica en Topografía - <a href="../pfc.html" target="_blank" style="color: blue">Proyecto Final de Carrera</a></p>
+          <hr>
+        </div>
+        <div class="w3-container">
+          <h5 class="w3-opacity resumetext"><b>ESRI Spaña</b></h5>
+          <h6 class="text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>2013 - 2014</h6>
+          <p>Esri Máster GIS, Sistemas de información geográfica - <a href="../pfm.html" target="_blank" style="color: blue">Proyecto Final de Máster</a></p>
+          <hr>
+        </div>
+        <div class="w3-container">
+          <h5 class="w3-opacity resumetext"><b>AZPE inform&#225;tica</b></h5>
+          <h6 class="text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>2014</h6>
+          <p>Técnico programador en JAVA, ASP.NET y Oracle</p><br>
+        </div>
+      </div>
+
+    <!-- End Right Column -->
+    </div>
+    
+  <!-- End Grid -->
+  </div>
+  <div style="margin: auto; max-width: 340px; border: 3px solid #3a016d; padding: 5px; border-radius: 25px; margin-top: 20px;margin-bottom: 20px;">
+  <a href="../resume.html"  target="_blank"><h3 style="text-align: center; color:#3a016d; font-family: "Segoe UI",Arial,sans-serif; "><i>Curriculum en papel</i></h3></a>
+  </div>
+
+  
+  <!-- End Resume Container -->
+</div>
+</div>
+
+
+  <!-- Project Section -->
+  <div style="background-color: #E9E9E9;">
+  <div class="w3-content w3-padding" style="max-width:1564px;">
+  <div class="w3-container w3-padding-32" id="projects" >
+    <h2 class=" w3-padding-16" style="font-family: helvetica; color: #135477; border-bottom:1px solid #ccc!important;border-color:#135477!important"><b>Proyectos</b></h2>
+  </div>
+
+
+  <div class="tabs">
+    <ul class="tab-links">
+        <li class="active"><a href="#tab1" style="text-align: center; color:#3a016d; font-family: "Segoe UI",Arial,sans-serif; ">En papel</a></li>
+        <li><a href="#tab2" style="text-align: center; color:#3a016d; font-family: "Segoe UI",Arial,sans-serif; ">Interactivos</a></li>      
+    </ul>
+
+
+     <div class="tab-content">
+        <!-- Tab1 Content -->
+        <div id="tab1" class="tab active">
+          
+            <!-- slideshow -->
+                <h1 style="text-align: center; color:#3a016d; font-family: "Segoe UI",Arial,sans-serif; ">Mapas en blanco y negro</h1>
+                <div class="slideshow-container">
+
+              <div class="mySlides fade">
+                <img src="../images/Baltimore.jpg" style="width:100%">
+                <div class="text">Baltimore</div>
+              </div>
+
+              <div class="mySlides fade">
+                <img src="../images/Oakland.jpg" style="width:100%">
+                <div class="text">Oakland</div>
+              </div>
+
+              <div class="mySlides fade">
+                <img src="../images/Philly.jpg" style="width:100%">
+                <div class="text">Philadelphia</div>
+              </div>
+
+               <div class="mySlides fade">
+                <img src="../images/BaltimoreMinority.jpg" style="width:100%">
+                <div class="text">Minorías en Baltimore</div>
+              </div>
+
+              <div class="mySlides fade">
+                <img src="../images/BaltimoreHOLC.jpg" style="width:100%">
+                <div class="text">Baltimore HOLC</div>
+              </div>
+
+              <div class="mySlides fade">
+                <img src="../images/BaltimoreHP.jpg" style="width:100%">
+                <div class="text">Préstamos para compra de vivienda en Baltimore</div>
+              </div>
+
+              <div class="mySlides fade">
+                <img src="../images/BaltimoreSB.jpg" style="width:100%">
+                <div class="text">Préstamos para pequeñas empresas en Baltimore</div>
+              </div>
+
+              <div class="mySlides fade">
+                <img src="../images/OaklandMinority.jpg" style="width:100%">
+                <div class="text">Minorías en Oakland</div>
+              </div>
+
+               <div class="mySlides fade">
+                <img src="../images/OaklandHOLC.jpg" style="width:100%">
+                <div class="text">Oakland HOLC</div>
+              </div>
+
+              <div class="mySlides fade">
+                <img src="../images/OaklandHP.jpg" style="width:100%">
+                <div class="text">Préstamos para compra de vivienda en Oakland</div>
+              </div>
+
+               <div class="mySlides fade">
+                <img src="../images/OaklandSB.jpg" style="width:100%">
+                <div class="text">Préstamos para pequeñas empresas en Oakland</div>
+              </div>
+
+               <div class="mySlides fade">
+                <img src="../images/PhillyMinority.jpg" style="width:100%">
+                <div class="text">Minorías en Philadelphia</div>
+              </div>
+
+              <div class="mySlides fade">
+                <img src="../images/PhillyHOLC.jpg" style="width:100%">
+                <div class="text">Philadelphia HOLC</div>
+              </div>
+
+
+               <div class="mySlides fade">
+                <img src="../images/PhillyHP.jpg" style="width:100%">
+                <div class="text">Préstamos para compra de vivienda en Philadelphia</div>
+              </div>
+
+              <div class="mySlides fade">
+                <img src="../images/PhillySB.jpg" style="width:100%">
+                <div class="text">Préstamos para pequeñas empresas en Philadelphia</div>
+              </div>
+
+             
+
+              </div>
+              <br>
+
+              <div style="text-align:center">
+                <span class="dot"></span> 
+                <span class="dot"></span> 
+                <span class="dot"></span> 
+                <span class="dot"></span> 
+                <span class="dot"></span> 
+                <span class="dot"></span> 
+                <span class="dot"></span> 
+                <span class="dot"></span> 
+                <span class="dot"></span> 
+                <span class="dot"></span> 
+                <span class="dot"></span> 
+                <span class="dot"></span> 
+                <span class="dot"></span> 
+                <span class="dot"></span> 
+                <span class="dot"></span> 
+              </div>
+
+
+              <div class="wrap">
+                <h1 style="text-align: center; color:#3a016d; margin-top: 40px;font-family: "Segoe UI",Arial,sans-serif; ">Análisis HOLC</h1>
+                
+                <div id="gallery">
+                <img src="../gallery/HOLCatlanta.jpg" alt="" id="main-img" />
+                <ul>
+                  <li><a href="http://maps.ncrc.org/holcanalysis/holcpdf/HOLC_Atlanta,%20GA.pdf" target="_blank"><img src="../gallery/thumb/HOLCatlanta.jpg" alt="Atlanta" width="100px;"  /></a></li>
+                  <li><a href="http://maps.ncrc.org/holcanalysis/holcpdf/HOLC_Birmingham,%20AL.pdf" target="_blank"><img src="../gallery/thumb/HOLCbirmingham.jpg" alt="Birmingham" width="100px;"  /></a></li>
+                  <li><a href="http://maps.ncrc.org/holcanalysis/holcpdf/HOLC_Cleveland,%20OH.pdf" target="_blank"><img src="../gallery/thumb/HOLCcleveland.jpg" alt="Cleveland" width="100px;"  /></a></li>
+                  <li><a href="http://maps.ncrc.org/holcanalysis/holcpdf/HOLC_Los%20Angeles,%20CA.pdf" target="_blank"><img src="../gallery/thumb/HOLCla.jpg" alt="Los Angeles" width="100px;"  /></a></li>
+                  <li><a href="http://maps.ncrc.org/holcanalysis/holcpdf/HOLC_New%20York%20MSA.pdf" target="_blank"><img src="../gallery/thumb/HOLCnewyork.jpg" alt=" New York"  width="100px;" /></a></li>
+                  <li><a href="http://maps.ncrc.org/holcanalysis/holcpdf/HOLC_Philadelphia,%20Candem,%20PA-NJ.pdf" target="_blank"><img src="../gallery/thumb/HOLCphilly.jpg" alt="Philadelphia" width="100px;" /></a></li>
+                </ul>
+              </div>
+
+              </div>
+              
+               <div style="text-align:center">
+              <h1 style="text-align: center; color:#3a016d; margin-top: 40px;font-family: "Segoe UI",Arial,sans-serif; ">Precios del Suelo en Alexandria, Virginia</h1>
+              <a href="../images/AlexandriaParcelValue.jpg" target="_blank"><img src="../images/AlexandriaParcelValue.jpg" alt="Alexandria Parcel Value" width="50%" /></a>
+              </div>
+
+
+        </div>  <!-- End Tab1 Content -->
+        
+        <!-- Tab2 Content -->
+        <div id="tab2" class="tab">
+
+            <!-- First Photo Grid-->
+            <div class="w3-row-padding">
+               <div class="w3-third w3-container w3-margin-bottom" >
+                <a class="foo" target="_blank" href="http://maps.ncrc.org/holc">
+                  <img src="../images/Thumbnailholc.jpg" alt="Analisis HOLC"  style="width:100%; border-top: 1px solid #ddd; border-left: 1px solid #ddd; border-right:1px solid #ddd;  padding: 4px; background-color: white;">
+                  <img src="../images/Thumbnailholcanalysis2.jpg" alt="Analisis HOLC"  style="width:100%; border-top: 1px solid #ddd; border-left: 1px solid #ddd; border-right:1px solid #ddd;  padding: 4px; background-color: white;">
+              </a>
+                <div class="w3-container w3-white" style="min-height: 150px; border-bottom: 1px solid #ddd; border-left: 1px solid #ddd; border-right:1px solid #ddd;">
+                  <p><b>Analisis HOLC</b></p>
+                  <p>Este informe muestra las consecuencias de la historia mas importante subyaciente en las ciudades de Estados Unidos hoy en dia: la historia del redlining</p>
+                </div>
+              </div>
+              <div class="w3-third w3-container w3-margin-bottom">
+                <a class="foo" target="_blank" href="http://maps.ncrc.org/alexandria">
+                  <img src="../images/Thumbnailalexandria.jpg" alt="Coste del suelo en la Ciudad de Alexandria"  style="width:100%; border-top: 1px solid #ddd; border-left: 1px solid #ddd; border-right:1px solid #ddd;  padding: 4px; background-color: white;">
+                  <img src="../images/Thumbnailalexandria2.jpg" alt="Coste del suelo en la Ciudad de Alexandria"  style="width:100%; border-top: 1px solid #ddd; border-left: 1px solid #ddd; border-right:1px solid #ddd;  padding: 4px; background-color: white;">
+              </a>
+                <div class="w3-container w3-white" style="min-height: 150px; border-bottom: 1px solid #ddd; border-left: 1px solid #ddd; border-right:1px solid #ddd;">
+                  <p><b>Coste del suelo en la Ciudad de Alexandria, Virginia</b></p>
+                  <p>Una visión general del coste del suelo en la Ciudad de Alexandria, Virginia.</p>
+                </div>
+              </div>
+              <div class="w3-third w3-container w3-margin-bottom">
+                <a class="foo" target="_blank" href="http://maps.ncrc.org/bankdeserts">
+                  <img src="../images/Thumbnaildeserts.jpg" alt="Desiertos Bancarios en Estados Unidos"  style="width:100%; border-top: 1px solid #ddd; border-left: 1px solid #ddd; border-right:1px solid #ddd;  padding: 4px; background-color: white;">
+                  <img src="../images/Thumbnaildeserts2.jpg" alt="Desiertos Bancarios en Estados Unidos"  style="width:100%; border-top: 1px solid #ddd; border-left: 1px solid #ddd; border-right:1px solid #ddd;  padding: 4px; background-color: white;">
+              </a>
+                <div class="w3-container w3-white" style="min-height: 150px; border-bottom: 1px solid #ddd; border-left: 1px solid #ddd; border-right:1px solid #ddd;">
+                  <p><b>Desiertos Bancarios en Estados Unidos</b></p>
+                  <p>Una visión general del cierre de sucursales bancarias desde 2008 hasta 2017 y su impacto.</p>
+                </div>
+              </div>
+             </div>
+            
+            <!-- Second Photo Grid-->
+            <div class="w3-row-padding">
+              <div class="w3-third w3-container w3-margin-bottom">
+               <a class="foo" target="_blank" href="http://maps.ncrc.org/hpdashboard">
+                  <img src="../images/Thumbnailhpdashboard.jpg" alt="Panel de Préstamos para compra de vivienda" style="width:100%; border-top: 1px solid #ddd; border-left: 1px solid #ddd; border-right:1px solid #ddd;  padding: 4px; background-color: white;">
+                  <img src="../images/Thumbnailhpdashboard2.jpg" alt="Panel de Préstamos para compra de vivienda" style="width:100%; border-top: 1px solid #ddd; border-left: 1px solid #ddd; border-right:1px solid #ddd;  padding: 4px; background-color: white;">
+              </a>
+                <div class="w3-container w3-white" style="min-height: 150px; border-bottom: 1px solid #ddd; border-left: 1px solid #ddd; border-right:1px solid #ddd;">
+                  <p><b>Panel de Préstamos para compra de vivienda</b></p>
+                  <p>Panel de Préstamos para compra de vivienda.</p>
+                </div>
+              </div>
+              <div class="w3-third w3-container w3-margin-bottom">
+               <a class="foo" target="_blank" href="http://arcg.is/2xrL72y">
+                  <img src="../images/manna.jpg" alt="Mapa de propiedades de MANNA" style="width:100%; border-top: 1px solid #ddd; border-left: 1px solid #ddd; border-right:1px solid #ddd;  padding: 4px; background-color: white;">
+                  <img src="../images/manna2.jpg" alt="Mapa de propiedades de MANNA" style="width:100%; border-top: 1px solid #ddd; border-left: 1px solid #ddd; border-right:1px solid #ddd;  padding: 4px; background-color: white;">
+                </a>
+                <div class="w3-container w3-white" style="min-height: 150px; border-bottom: 1px solid #ddd; border-left: 1px solid #ddd; border-right:1px solid #ddd;">
+                  <p><b>Mapa de propiedades de MANNA</b></p>
+                  <p>Desde su fundación en 1982, MANNA ha fomentado casi 1200 unidades de vivienda asequible. En este mapa puedes encontrar proyectos que MANNA ha generado para ayudar a miembros marginados de la comunidad de DC a ascender en la escalera económica.</p>
+                </div>
+              </div>
+              <div class="w3-third w3-container w3-margin-bottom">
+                <a class="foo" target="_blank" href="http://maps.ncrc.org/houston">
+                  <img src="../images/Thumbnailhouston.jpg" alt="Huracán Harvey" style="width:100%; border-top: 1px solid #ddd; border-left: 1px solid #ddd; border-right:1px solid #ddd;  padding: 4px; background-color: white;">
+                  <img src="../images/Thumbnailhouston2.jpg" alt="Huracán Harvey" style="width:100%; border-top: 1px solid #ddd; border-left: 1px solid #ddd; border-right:1px solid #ddd;  padding: 4px; background-color: white;">
+              </a>
+                <div class="w3-container w3-white" style="min-height: 150px; border-bottom: 1px solid #ddd; border-left: 1px solid #ddd; border-right:1px solid #ddd;">
+                  <p><b>Huracán Harvey</b></p>
+                  <p>Houston Texas está sufriendo inundaciones catastróficas como resultado del huracán Harvey, el cual tocó tierra el viernes 25 de agosto de 2017. Este es el tercer año consecutivo que Houston ha tenido inundaciones en áreas de provabilidad de inundación de 1 entre 500 al año.</p>
+                </div>
+              </div>
+            </div>
+
+
+             <!-- Third Photo Grid-->
+            <div class="w3-row-padding">
+              <div class="w3-third w3-container w3-margin-bottom">
+               <a class="foo" target="_blank" href="http://maps.ncrc.org/irma">
+                  <img src="../images/Thumbnailirma.jpg" alt="Huracán Irma" style="width:100%; border-top: 1px solid #ddd; border-left: 1px solid #ddd; border-right:1px solid #ddd;  padding: 4px; background-color: white;">
+                  <img src="../images/Thumbnailirma2.jpg" alt="Huracán Irma" style="width:100%; border-top: 1px solid #ddd; border-left: 1px solid #ddd; border-right:1px solid #ddd;  padding: 4px; background-color: white;">
+              </a>
+                <div class="w3-container w3-white" style="min-height: 150px; border-bottom: 1px solid #ddd; border-left: 1px solid #ddd; border-right:1px solid #ddd;">
+                  <p><b>Huracán Irma</b></p>
+                  <p>Este mapa web muestra los continuos fuertes vientos e inundaciones generadas por la subida del nivel del agua y su relación con población vulnerable.</p>
+                </div>
+              </div>
+              <div class="w3-third w3-container w3-margin-bottom">
+               <a class="foo" target="_blank" href="http://maps.ncrc.org/sidebyside">
+                  <img src="../images/Thumbnailsidebyside.jpg" alt="Mapas lado a lado" style="width:100%; border-top: 1px solid #ddd; border-left: 1px solid #ddd; border-right:1px solid #ddd;  padding: 4px; background-color: white;">
+                  <img src="../images/Thumbnailsidebyside2.jpg" alt="Mapas lado a lado" style="width:100%; border-top: 1px solid #ddd; border-left: 1px solid #ddd; border-right:1px solid #ddd;  padding: 4px; background-color: white;">
+              </a>
+                <div class="w3-container w3-white" style="min-height: 150px; border-bottom: 1px solid #ddd; border-left: 1px solid #ddd; border-right:1px solid #ddd;">
+                  <p><b>Mapas lado a lado</b></p>
+                  <p>Esta app compara lado a lado sucursales bancarias,  préstamos de compra de vivienda, préstamos para pequeñas empresas e información de distritos del Congreso.</p>
+                </div>
+              </div>
+               <div class="w3-third w3-container w3-margin-bottom">
+               <a class="foo" target="_blank" href="http://maps.ncrc.org/massachusetts">
+                  <img src="../images/Thumbnailmassachusetts.jpg" alt="Massachusetts" style="width:100%; border-top: 1px solid #ddd; border-left: 1px solid #ddd; border-right:1px solid #ddd;  padding: 4px; background-color: white;">
+                  <img src="../images/Thumbnailmassachusetts2.jpg" alt="Massachusetts" style="width:100%; border-top: 1px solid #ddd; border-left: 1px solid #ddd; border-right:1px solid #ddd;  padding: 4px; background-color: white;">
+              </a>
+                <div class="w3-container w3-white" style="min-height: 150px; border-bottom: 1px solid #ddd; border-left: 1px solid #ddd; border-right:1px solid #ddd;">
+                  <p><b>Massachusetts</b></p>
+                  <p>Préstamos FHA en Massachusetts.</p>
+                </div>
+              </div>
+            </div>
+
+            
+        </div>  <!-- End Tab2 Content --> 
+
+       
+    </div>
+</div>
+
+
+
+</div> <!-- End Projects Content --> 
+
+<script>
+var slideIndex = 0;
+showSlides();
+
+function showSlides() {
+    var i;
+    var slides = document.getElementsByClassName("mySlides");
+    var dots = document.getElementsByClassName("dot");
+    for (i = 0; i < slides.length; i++) {
+       slides[i].style.display = "none";  
+    }
+    slideIndex++;
+    if (slideIndex > slides.length) {slideIndex = 1}    
+    for (i = 0; i < dots.length; i++) {
+        dots[i].className = dots[i].className.replace(" active", "");
+    }
+    slides[slideIndex-1].style.display = "block";  
+    dots[slideIndex-1].className += " active";
+    setTimeout(showSlides, 5000); // Change image every 5 seconds
+}
+</script>
+
+  <!-- About Section -->
+  <div class="w3-content w3-padding" style="max-width:1564px;">
+  <div class="w3-container w3-padding-32" id="about">
+    <h2 class=" w3-padding-16" style="font-family: helvetica; color: #135477; border-bottom:1px solid #ccc!important;border-color:#135477!important"><b>Sobre mi</b></h2>
+    <p style="font-size: 20px; margin-right: 35px; margin-left: 35px; text-align: justify;"><img src="../images/me.jpg" alt="Yo" style="float: left; margin-right: 35px; margin-left: 35px; border-radius: 15px; width: 40%; border: 1px solid #3a016d;"  />Además de ser un especialista GIS senior, soy español y orgulloso de ello. Nací y crecí en Navalmoral de la Mata, un pueblo pequeño cerca de la frontera entre España y Portugal, y fui a la universidad en Madrid. Como capital de españa y ciudad más grande del país, Madrid tiene el el tercer mayor PIB de la Unión Europea y contribuye de muchas formas con tendencias mundiales en política, medios, moda, cultura, entretenimiento y mucho más. Habiendo vivido ya casi tres años en los Estados Unidos con mi mujer americana, he podido conocer gente de muchos países diferentes y disfruto mucho aprendiendo y explorando sus culturas y tradiciones.
+    </p>
+    <br style="clear:both" />
+
+    <blockquote>
+    <p style="text-align: center; font-family: helvetica">
+    "GIS es una forma de tecnología de mapas digitales. Parecido a Google Earth, pero mejor."</br> <p style="text-align: center; font-family: helvetica; color: grey; font-size: 20px;">Arnold Schwarzenegger en la Conferencia de Tecnología del Gobierno de 2008.</p>
+    </p>
+    </blockquote>
+
+  </div>
+
+  <div class="w3-row-padding w3-grayscale">
+    
+   
+    
+   
+  </div>
+</div>
+		
+	
+	
+	<!-- Contact Section -->
+  <div style="background-color: #E98E4E;">
+  <div class="w3-content w3-padding" style="max-width:1564px;">
+	<div class="w3-container w3-padding-32" id="contact">
+    <h2 class=" w3-padding-16" style="font-family: helvetica; color: #135477; border-bottom:1px solid #ccc!important;border-color:#135477!important"><b>Contacto</b></h2>
+    <p>Pongámonos en contacto y hablemos sobre próximos proyectos</p>
+    <form action="../action_page.php" method="post" target="_blank">
+      <input class="w3-input" type="text" placeholder="Name" required name="Name">
+      <input class="w3-input w3-section" type="text" placeholder="Email" required name="Email">
+      <input class="w3-input w3-section" type="text" placeholder="Subject" required name="Subject">
+      <textarea class="textmail" cols="30" rows="10" type="text" placeholder="Comment" required name="Comment"></textarea>
+      <button class="w3-button w3-black w3-section" type="submit">
+        <i class="fa fa-paper-plane"></i> MANDAR MENSAJE
+      </button>
+    </form>
+	</div>
+</div>
+</div>
+  
+<!-- End page content -->
+</div>
+
+
+<!-- Map -->
+  <div id="map"  style="width:100%;height:450px;"></div>
+
+
+<!-- Footer -->
+
+<footer class="w3-container w3-black w3-center">
+  <p></p>
+  <a href="mailto:jd.franco.caballero@gmail.com"><i class="fa fa-envelope w3-hover-opacity w3-xxlarge" style="margin: 0 1rem;"></i></a>
+  <a href="https://github.com/jdfrancoc" target="_blank"><i class="fa fa-github w3-hover-opacity w3-xxlarge" style="margin: 0 1rem;"></i></a>
+  <a href="https://www.linkedin.com/in/jdfranco" target="_blank"><i class="fa fa-linkedin w3-hover-opacity w3-xxlarge" style="margin: 0 1rem;"></i></a>
+  <p>Diseñado por <a href="https://www.linkedin.com/in/jdfranco" target="_blank" class="w3-hover-text-blue">Juan Franco</a></p>
+</footer>
+
+</body>
+</html>
