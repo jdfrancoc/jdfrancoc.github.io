@@ -1,1 +1,0 @@
-# jdfrancoc.github.io
