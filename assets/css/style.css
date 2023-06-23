@@ -1217,3 +1217,9 @@ section {
   transition: 0.4s;
   border-radius: 50px;
 }
+
+.skilllogo{
+  width: 30px;
+  height: auto;
+  margin-left: 10px;
+}
