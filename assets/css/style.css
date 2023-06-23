@@ -1208,3 +1208,12 @@ section {
 #footer .credits {
   font-size: 13px;
 }
+
+.sendmessage{
+  background: #0563bb;
+  border: 0;
+  padding: 10px 35px;
+  color: #fff;
+  transition: 0.4s;
+  border-radius: 50px;
+}
