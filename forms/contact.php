@@ -1,41 +1,51 @@
 <?php
-  /**
-  * Requires the "PHP Email Form" library
-  * The "PHP Email Form" library is available only in the pro version of the template
-  * The library should be uploaded to: vendor/php-email-form/php-email-form.php
-  * For more info and help: https://bootstrapmade.com/php-email-form/
-  */
+	if(isset($_POST['Name']) && isset($_POST['Email'])){
+	$name=$_POST['Name'];
+	$email=$_POST['Email'];
+	$comment=$_POST['Comment'];
+	//send mail 
+	 $to='jd.franco.caballero@gmail.com';
+	 $subject=$_POST['Subject'];
+	 $body='<html>
+	 <body>
+	 <h3>Feedback</h3>
+	 <hr>
 
-  // Replace contact@example.com with your real receiving email address
-  $receiving_email_address = 'contact@example.com';
+	 <p> Name : '.$name.'</p>
+	 <br>
 
-  if( file_exists($php_email_form = '../assets/vendor/php-email-form/php-email-form.php' )) {
-    include( $php_email_form );
-  } else {
-    die( 'Unable to load the "PHP Email Form" Library!');
-  }
+	 <p> Email : '.$email.'</p>
+	 
+	 <p> '.$comment.'</p>
 
-  $contact = new PHP_Email_Form;
-  $contact->ajax = true;
-  
-  $contact->to = $receiving_email_address;
-  $contact->from_name = $_POST['name'];
-  $contact->from_email = $_POST['email'];
-  $contact->subject = $_POST['subject'];
+	 </body>
 
-  // Uncomment below code if you want to use SMTP to send emails. You need to enter your correct SMTP credentials
-  /*
-  $contact->smtp = array(
-    'host' => 'example.com',
-    'username' => 'example',
-    'password' => 'pass',
-    'port' => '587'
-  );
-  */
+	 </html>';
 
-  $contact->add_message( $_POST['name'], 'From');
-  $contact->add_message( $_POST['email'], 'Email');
-  $contact->add_message( $_POST['message'], 'Message', 10);
+	 $headers  ="From:".$name."<".$email.">\r\n";
+	 $headers .="reply-To:".$email."\r\n";
+	 $headers .="NINE-Version: 1.0\r\n";
+	 $headers .="Content-type: text/html; charset=utf-8";
 
-  echo $contact->send();
-?>
+
+	//confirmation mail
+	 $user=$email;
+	 $usersubject = "Email confirmation";
+	 $userheaders = "From: Juan Franco, jd.franco.caballero@gmail.com";
+	 $usermessage = "Thank you for contacting me, I will reply shortly.";
+
+
+	//sending process
+	 $send=mail($to, $subject, $body, $headers);
+	 $confirm=mail($user, $usersubject, $userheaders,$usermessage );
+
+	 if($send && $confirm){
+	  echo "success";
+	 }
+
+	 else{
+	  echo "Failed";
+	 }
+
+	}
+	?>
