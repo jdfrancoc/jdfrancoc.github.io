@@ -499,6 +499,7 @@ section {
 .skills .progress .skill .val {
   float: right;
   font-style: normal;
+  margin-top: 3px;
 }
 
 .skills .progress-bar-wrap {
@@ -1221,5 +1222,6 @@ section {
 .skilllogo{
   width: 30px;
   height: auto;
-  margin-left: 10px;
+  margin-right: 10px;
+  margin-top
 }
