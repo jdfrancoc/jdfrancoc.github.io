@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>US Weather warnings</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+    <script src="jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="papaparse.min.js"></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
+    <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css" type="text/css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+
+        #geocoder{
+            position: absolute;
+            left: 50px;
+            top: 50px;
+            z-index: 2;
+        }
+
+        .mapboxgl-ctrl-geocoder {
+            background: rgba(0,0,0,.5);
+        }
+
+        .mapboxgl-ctrl-geocoder--input {
+            color: rgba(255, 255, 255, 1);
+        }
+
+        .mapboxgl-ctrl-geocoder--input:focus {
+            color: rgba(255, 255, 255, 1);
+        }
+
+        .mapboxgl-ctrl-geocoder--input::placeholder {
+            color: rgba(255, 255, 255, 0.75);
+        }
+        .mapboxgl-ctrl-geocoder--input:-ms-input-placeholder {
+            color: rgba(255, 255, 255, 0.75);
+        }
+        .mapboxgl-ctrl-geocoder--input::-ms-input-placeholder {
+            color: rgba(255, 255, 255, 0.75);
+        }
+
+        .mapboxgl-ctrl-geocoder .suggestions {
+            background-color: #4a463b;
+        }
+
+        .mapboxgl-ctrl-geocoder .suggestions > li > a {
+            cursor: default;
+            display: block;
+            padding: 6px 12px;
+            color: white;
+        }
+
+        #legend{
+            position: absolute;
+            width: 180px;
+            top: 100px;
+            left: 34px;
+            max-height: 400px;
+            overflow-y: scroll;
+            z-index: 1;
+            color: white;
+            line-height: 2.142em;
+            margin: 3px 0 0 1em;
+            font-family: Helvetica Neue,Arial,Helvetica,sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            background: rgba(0,0,0,.5);
+            border: 1px solid black;
+            border-radius: 10px;
+            padding: 0px 15px 10px;
+            box-shadow: 0 0 10px 2px rgba(0,0,0,.1);
+        }
+
+        #legend::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        #legend::-webkit-scrollbar-thumb {
+            background: rgba(200, 200, 200);
+            border-radius: 10px;
+        }
+
+        #legend::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0);
+        }
+
+        .legend-key {
+            display: inline-block;
+            border-radius: 20%;
+            width: 15px;
+            height: 15px;
+            margin-right: 5px;
+            border: 0.5px solid;
+        }
+
+        .legenditem:hover{
+            cursor: pointer;
+        }
+
+        #weather{
+            position: absolute;
+            right: 50px;
+            top: 50px;
+            z-index: 2;
+            width: 300px;
+            height: auto;
+            color: white;
+            line-height: 2.142em;
+            margin: 3px 0 0 1em;
+            font-family: Helvetica Neue,Arial,Helvetica,sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            background: rgba(0,0,0,.5);
+            border: 1px solid black;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 0 10px 2px rgba(0,0,0,.1);
+        }
+
+        #weather img{
+            width: 30px;
+            height: 30px;
+            display: inline ;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        #weather p{
+            display: inline ;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map">
+        
+        <div id="legend">
+            <p><b>Warnings:</b></p>
+        </div>
+        <div id="geocoder"></div>
+        <div id="weather" style="display: none;">
+            <div style="margin-bottom: 15px;"><img src="img/location.png"><p style="text-decoration: underline;" id="location"></p></div>
+            <div style="margin-bottom: 15px;"><img src="img/temperature.png"><p>Temperature: <span id="temperature"></span></p></div>
+            <div style="margin-bottom: 15px;"><img src="img/humidity.png"><p>Humidity: <span id="humidity"></span></p></div>
+            <div style="margin-bottom: 15px;"><img src="img/precipitation.png"><p>Precipitation: <span id="precipitation"></span></p></div>
+            <div style="margin-bottom: 15px;"><img src="img/wind.png"><p>Wind Speeds: <span id="wind"></span></p></div>
+            <div style="margin-bottom: 15px;"><img src="img/sunrise.png"><p>Sunrise: <span id="sunrise"></span></p></div>
+            <div style="margin-bottom: 15px;"><img src="img/sunset.png"><p>Sunset: <span id="sunset"></span></p></div>
+        </div>
+    </div>
+
+    <script>
+        var map, warninzones, expression, expression2;
+        var warnings = {};
+        var warningsarray = []
+        var warninglist = []
+        var warninglist2 = []
+        var colorlist = []
+        var colorlist2 = []
+        var prioritylist = []
+        var activewarnings=[]
+
+        $(document).ready(function () {
+            getwarningmeta()
+            mapboxgl.accessToken = 'pk.eyJ1IjoibG92ZWx5dGljcyIsImEiOiJjanAxYXY3dW4zZGdyM3BuaGx3NTg5bGE4In0.R2kB7nUUd7QsBpJ5Ck6TkQ';
+            map = new mapboxgl.Map({
+                container: 'map', // container ID
+                style: 'mapbox://styles/mapbox/streets-v11', // style URL
+                center: [-98.5, 39.5], // starting position [lng, lat]
+                zoom: 4.5, // starting zoom
+                projection: 'mercator' // starting projection
+            });
+
+            var geocoder = new MapboxGeocoder({
+            accessToken: mapboxgl.accessToken,
+            mapboxgl: mapboxgl,
+            placeholder: 'Search local weather',
+            // limit results to United estates
+            countries: 'us',
+            })
+
+            document.getElementById('geocoder').appendChild(geocoder.onAdd(map));
+            $('.mapboxgl-ctrl-geocoder--icon-search path').css({ fill: '#ffffff'});
+
+
+            geocoder.on('result', function (ev) {
+                var ePoint = ev.result.geometry.coordinates;
+                var latitude=ePoint[1]
+                var longitude=ePoint[0]
+                getWeather(longitude,latitude)
+            })
+
+
+            map.on('load', function () {
+                $('.mapboxgl-ctrl-geocoder--icon-close').click(function(){
+                    $('#weather').hide()
+                })
+
+                let blank = {
+                    "type": "FeatureCollection",
+                    "features": []
+                }
+                map.addSource("warningzones", {
+                    type: "geojson",
+                    data: blank
+                });
+
+
+                map.addLayer({
+                    id: "warningzones",
+                    type: "fill",
+                    source: "warningzones",
+                    'layout': {
+                        'visibility': 'visible',
+                    },
+                    paint: {
+                        "fill-color": '#ccc',
+                        "fill-opacity": 0.9,
+                        "fill-outline-color": '#000'
+                    }
+                });
+
+                map.on('click', 'warningzones', (e) => {
+                    console.log(e.features[0].properties.event)
+                    if (e.features[0].properties.event != []) {
+                        var zonename = e.features[0].properties.NAME
+                        var zone = e.features[0].properties.event.split("~")[0].split('["')[1]
+                        var event = e.features[0].properties.event.split("~")[1]
+                        var effective = e.features[0].properties.event.split("~")[2]
+                        var expires = e.features[0].properties.event.split("~")[3]
+                        var areadesc = e.features[0].properties.event.split("~")[4]
+                        var summary = e.features[0].properties.event.split("~")[5].split('"]')[0]
+                        const description = '<h4>' + zonename + ' (' + zone + ')</h4><h3>' + event + '</h3><p>Effective: ' + effective + '</p><p>Expires: ' + expires + '</p><p>' + summary + '</p>'
+
+
+
+                        new mapboxgl.Popup()
+                            .setLngLat(e.lngLat)
+                            .setHTML(description)
+                            .addTo(map);
+                    } else { console.log('NADA') }
+                });
+
+            })
+            $.ajax({
+                type: 'GET',
+                url: 'warningzones.geojson',
+                cache: false,
+                dataType: "json",
+                success: function (data) {
+                    warninzones = data
+                    getWarning()
+                }
+            });
+        });
+
+
+        function getWeather(long,lat){
+            var date=new Date()
+            var year=date.getFullYear()
+            var month=date.getMonth()+1
+            if(month<10){month="0"+month}
+            var day=date.getDate()
+            if(day<10){day="0"+day}
+            var minutes="00"
+            var hour=date.getHours()
+            if(date.getMinutes()>45){hour=hour+1}
+            if(hour.toString().length<2){hour="0"+hour}
+            var formatteddate=year+"-"+month+"-"+day+'T'+hour+":"+minutes
+            console.log(formatteddate)
+           var weatherurl= "https://api.open-meteo.com/v1/forecast?latitude="+lat+"&longitude="+long+"&hourly=temperature_2m,relativehumidity_2m,precipitation_probability,windspeed_10m,uv_index&daily=sunrise,sunset&temperature_unit=fahrenheit&windspeed_unit=mph&precipitation_unit=inch&timezone=America%2FNew_York"
+           
+           $.getJSON(weatherurl, function (result) {
+                $.ajax({
+                    type: "GET",
+                    url: weatherurl,
+                    cache: false,
+                    dataType: "json",
+                    success: function (json) {
+                        
+                        console.log(json)
+                       var index = json.hourly.time.indexOf(formatteddate)
+                       console.log(index)
+                       console.log("temperature: "+json.hourly.temperature_2m[index]+json.hourly_units.temperature_2m)
+                       console.log("Humidity: "+json.hourly.relativehumidity_2m[index]+json.hourly_units.relativehumidity_2m)
+                       console.log("Precipitation: "+json.hourly.precipitation_probability[index]+json.hourly_units.precipitation_probability)
+                       console.log("Wind Speed: "+json.hourly.windspeed_10m[index]+json.hourly_units.windspeed_10m)
+                       console.log("uv_index: "+json.hourly.uv_index[index]+json.hourly_units.uv_index)
+                        $("#location").text($('.mapboxgl-ctrl-geocoder--input').val())
+                       $("#temperature").text(json.hourly.temperature_2m[index]+json.hourly_units.temperature_2m)
+                       $("#humidity").text(json.hourly.relativehumidity_2m[index]+json.hourly_units.relativehumidity_2m)
+                       $("#precipitation").text(json.hourly.precipitation_probability[index]+json.hourly_units.precipitation_probability)
+                       $("#wind").text(json.hourly.windspeed_10m[index]+json.hourly_units.windspeed_10m)
+                       $("#uvindex").text(json.hourly.uv_index[index]+json.hourly_units.uv_index)
+                       $("#sunrise").text(json.daily.sunrise[0].split('T')[1])
+                       $("#sunset").text(json.daily.sunset[0].split('T')[1])
+                       $('#weather').show()
+                    }
+                })
+           })
+        }
+
+        function getWarning() {
+            //Expression will hold the color property expression
+            let expression = ["match", ["get", "ZONECODE"]];
+
+            var url = "./warningzones.geojson"
+            var haswarning = 0
+            $.getJSON(url, function (result) {
+
+                $.ajax({
+                    type: "GET",
+                    url: "https://alerts.weather.gov/cap/us.php?x=0",
+                    cache: false,
+                    dataType: "xml",
+                    success: function (xml) {
+
+                        var usedzones = []
+                        var a = 0
+                        var b = 0
+                        $(xml).find('entry').each(function () {
+                            b++
+                            var event = $(this).find("cap\\:event").text()
+                            var effective = $(this).find("cap\\:effective").text()
+                            var expires = $(this).find("cap\\:expires").text()
+                            var areaDesc = $(this).find("cap\\:areaDesc").text()
+                            var geo = $(this).find("cap\\:geocode").find("value").last().text()
+                            var title = $(this).find("title").text()
+                            var summary = $(this).find("summary").text()
+                            let zonesplit = ""
+                            // console.log(geo)
+                            var geozones = geo.split(" ")
+                            if(activewarnings.indexOf(event)<0){ activewarnings.push(event)}
+                            geozones.forEach(function (value) {
+                                a++
+                                zonesplit = value
+                                y = usedzones.length
+                                warnings[zonesplit + "-" + y] = [event, effective, expires, areaDesc, summary]
+                                warningsarray.push({ 'ZONE': zonesplit, 'event': event, 'effective': effective, 'expires': expires, 'area': areaDesc, 'summary': summary })
+
+                                usedzones.push(zonesplit)
+                            })
+
+                        });
+                        
+                        activewarnings.forEach(function(warning){
+                            var index=warninglist2.indexOf(warning)
+                            console.log(index)
+                            $('#legend').append('<div class="legenditem" style="padding: 10px 0;"><span class="legend-key" style="background-color:'+colorlist2[index]+';"></span><span class="warning" style="vertical-align: top;">'+warning+'</span></div>')
+                        })
+
+                        $('.legenditem').hover(mouseEnter, mouseLeave);
+                        function mouseEnter() {
+                            // do something when the mouse enters the dom node 
+                            console.log($(this).find( ".warning" ).text())
+                            var newexpression = ['match', ['get', 'color']];
+                            var newcolor=colorlist2[warninglist2.indexOf($(this).find( ".warning" ).text())]
+                            newexpression.push(newcolor, 0.6)
+                            newexpression.push(0);
+                            map.setPaintProperty('warningzones', "fill-opacity", newexpression);
+                        };
+                        function mouseLeave() {
+                            // do something when the mouse leaves the dom node
+                            map.setPaintProperty('warningzones', "fill-opacity", expression2);
+                        };
+                        // colorlist
+                        console.log(activewarnings)
+                        warninzones.features.forEach(function (zone) {
+                            zone.properties.event = []
+                            var priority = 1000
+                            for (var i = 0; i < warningsarray.length; i++) {
+                                if (zone.properties.warningzon == warningsarray[i].ZONE) {
+                                    var priorityindex = warninglist.indexOf(warningsarray[i].event)
+                                    var checkpriority = prioritylist[priorityindex]
+                                    if (checkpriority <= priority) {
+                                        priority = checkpriority
+                                        zone.properties.color = colorlist2[priorityindex]
+                                    }
+                                    var obj = warningsarray[i].ZONE + '~' + warningsarray[i].event + '~' + warningsarray[i].effective + '~' + warningsarray[i].expires + '~' + warningsarray[i].areaDesc + '~' + warningsarray[i].summary
+
+                                    zone.properties.event.push(obj)
+                                }
+                            }
+                            // console.log(zone.properties.color, zone.properties.event)
+                        })
+                        let geojson = {
+                            type: "FeatureCollection",
+                            features: warninzones.features
+                        };
+                        map.getSource('warningzones').setData(warninzones);
+                        expression = ['match', ['get', 'color']];
+                        for (var c = 0; c < colorlist.length; c++) {
+                            color = colorlist[c]
+                            if (color && color != "&nbsp;") {
+                                expression.push(color, color);
+                            }
+                        }
+                        expression.push('#000000');
+
+                        expression2 = ['match', ['get', 'color']];
+                        for (var c = 0; c < colorlist.length; c++) {
+                            color = colorlist[c]
+                            if (color && color != "&nbsp;") {
+                                expression2.push(color, 0.6);
+                            }
+                        }
+                        expression2.push(0);
+                        map.setPaintProperty('warningzones', "fill-color", expression);
+                        map.setPaintProperty('warningzones', "fill-opacity", expression2);
+                    }
+                });
+            })
+
+        }
+
+        function getwarningmeta() {
+            Papa.parse("colors.csv", {
+                header: true,
+                download: true,
+                complete: function (results) {
+                    gblData = results.data
+                    console.log(gblData)
+                    warninglist = [...new Set(gblData.map(cl => cl.Hazard))];
+                    colorlist = [...new Set(gblData.map(cl => cl.HexCode))];
+                    results.data.forEach(function (dat) {
+                        warninglist2.push(dat.Hazard)
+                        colorlist2.push(dat.HexCode)
+                    })
+                    prioritylist = [...new Set(gblData.map(cl => cl.Priority))];
+                }
+            });
+
+        }
+
+    </script>
+
+</body>
+
+</html>
