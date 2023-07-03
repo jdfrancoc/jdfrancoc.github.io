@@ -259,7 +259,7 @@
             })
             $.ajax({
                 type: 'GET',
-                url: 'https://apps.lovelytics.info/demo/weather/data/warningzones.geojson',
+                url: 'https://drive.google.com/file/d/1zZ4epH5htglK1q0ZTSzmRqJ4kzepa68G',
                 cache: false,
                 dataType: "json",
                 success: function (data) {
@@ -319,7 +319,7 @@
             //Expression will hold the color property expression
             let expression = ["match", ["get", "ZONECODE"]];
 
-            var url = "./warningzones.geojson"
+            var url = "https://drive.google.com/file/d/1zZ4epH5htglK1q0ZTSzmRqJ4kzepa68G"
             var haswarning = 0
             $.getJSON(url, function (result) {
 
